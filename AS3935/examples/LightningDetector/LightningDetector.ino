@@ -31,8 +31,11 @@ void printAS3935Registers();
 void AS3935Irq();
 volatile int AS3935IrqTriggered;
 
+int IRQ_PIN = 2;  // Int.0 IRQ pin (2 on Uno/Mega, 3 on Leonardo)
+int DEV_ADD = 03; // Sensor I2C device address (should be 03)
+
 // Library object initialization First argument is interrupt pin, second is device I2C address
-AS3935 AS3935(2,0);
+AS3935 AS3935(IRQ_PIN,DEV_ADD);
 
 void setup()
 {
@@ -52,8 +55,11 @@ void setup()
   // and run calibration
   // if lightning detector can not tune tank circuit to required tolerance,
   // calibration function will return false
-  if(!AS3935.calibrate())
-    Serial.println("Tuning out of range, check your wiring, your sensor and make sure physics laws have not changed!");
+  //if(!AS3935.calibrate())
+  //  Serial.println("Tuning out of range, check your wiring, your sensor and make sure physics laws have not changed!");
+
+  // Use tune value from MOD-1016 instead of full calibration
+  AS3935.tune(3);  // The number used here (3) came on the packaging
 
   // since this is demo code, we just go on minding our own business and ignore the fact that someone divided by zero
 
@@ -69,10 +75,11 @@ void setup()
   // demo is written and tested on ChipKit MAX32, irq pin is connected to max32 pin 2, that corresponds to interrupt 1
   // look up what pins can be used as interrupts on your specific board and how pins map to int numbers
 
+  int myIRQ = 0   // Set Int.N value (0 corresponds to IRQ pin 2)
   // ChipKit Max32 - irq connected to pin 2
-  // attachInterrupt(1,AS3935Irq,RISING);
+  // attachInterrupt(myIRQ,AS3935Irq,RISING);
   // uncomment line below and comment out line above for Arduino Mega 2560, irq still connected to pin 2, same for atmega328p
-  attachInterrupt(0,AS3935Irq,RISING);
+  attachInterrupt(myIRQ,AS3935Irq,RISING);
 }
 
 void loop()

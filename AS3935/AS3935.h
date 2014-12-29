@@ -57,6 +57,7 @@ public:
 	uint8_t registerRead(uint8_t reg, uint8_t mask);
 	void reset();
 	bool calibrate();
+	void tune(int tuneValue);
 	void powerDown();
 	void powerUp();
 	uint16_t interruptSource();

@@ -141,6 +141,13 @@ bool AS3935::calibrate()
 	return bestdiff > 109?false:true;
 }	
 
+void AS3935::tune(int tuneValue)
+{
+   registerWrite(AS3935_TUN_CAP,tuneValue);
+   delay(2);
+   powerUp();
+}
+
 void AS3935::powerDown()
 {
 	registerWrite(AS3935_PWD,1);
